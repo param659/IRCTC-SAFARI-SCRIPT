@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         IRCTC Automation Safari
 // @namespace    irctc.mobile.autofill
-// @version      2.5
+// @version      3.0
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
-// @updateURL    https://raw.githubusercontent.com/USERNAME/REPO/main/yourscript.meta.js
-// @downloadURL  https://raw.githubusercontent.com/USERNAME/REPO/main/yourscript.user.js   
+// @updateURL    https://github.com/param659/IRCTC-SAFARI-SCRIPT/blob/main/content.js
+// @downloadURL  https://github.com/param659/IRCTC-SAFARI-SCRIPT/blob/main/content.js   
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -315,7 +315,7 @@ async function clickContinue(){
         if (btn) {
             safeClick(btn);
             status("Continue Clicked ✔");
-            await waitForReviewBookingPage();
+            // await waitForReviewBookingPage();
             return; 
         }
         
@@ -467,7 +467,9 @@ await selectQuota();
   
 
  // SEARCH button
- let searchBtn = document.querySelector('#divMain > div > app-main-page > div > div > div.col-xs-12.level_2.slanted-div > div.col-xs-12.remove-padding.tbis-box.tbis-box-pad > div > app-jp-input > div > form > div.row > div > button');
+ 
+ let searchBtn = [document.querySelector("button, input[type='submit']")]
+            .find(b => b.textContent.trim().includes("Search Trains"));
  if(searchBtn){
    safeClick(searchBtn);
    status("✅ Search clicked - waiting for trains...");
@@ -555,6 +557,5 @@ function ensureButton(){
 }
 
 ensureButton();
-
 
 })();
