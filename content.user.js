@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         IRCTC Automation Safari
 // @namespace    irctc.mobile.autofill
-// @version      2.3
+// @version      3.0
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
-// @updateURL    https://github.com/param659/IRCTC-SAFARI-SCRIPT/blob/main/content.user.js
-// @downloadURL  https://github.com/param659/IRCTC-SAFARI-SCRIPT/blob/main/content.user.js   
+// @updateURL    https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js
+// @downloadURL  https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js   
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
