@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         IRCTC Automation Safari Param
+// @name         IRCTC
 // @namespace    irctc.mobile.autofill
-// @version      3.2
+// @version      4.0
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
 // @updateURL    https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js
@@ -16,6 +16,14 @@
 console.log("IRCTC Autofill ALWAYS Loaded");
 
 /* ================= CONFIG ================= */
+
+const TRAIN_NO = "20907";
+const TRAIN_CLASS = "Sleeper (SL)"; //AC 3 Tier (3A), AC 2 Tier (2A), AC First Class (1A), Sleeper (SL),AC Chair car (CC)
+const FROM_STATION = "DADAR - DDR (MUMBAI)";
+const TO_STATION = "BHUJ - BHUJ";
+const TRAVEL_DATE = "05/03/2026";
+const QUOTA = "GENERAL";
+const TIME = "07:59:59"; // 24hr format - when booking opens for the date  
 
 const PASSENGERS = [
   { name:"Trilochan", age:"27", gender:"MALE", berth:"No Preference" },
@@ -373,11 +381,7 @@ async function confirmewallet() {
     
 }
 
-/* ================= SEARCH CONFIG ================= */
-const FROM_STATION = "DADAR - DDR (MUMBAI)";      // Change to your from station code
-const TO_STATION = "BHUJ - BHUJ";         // Change to your to station code  
-const TRAVEL_DATE = "04/03/2026"; // DD-MM-YYYY format
-const QUOTA = "TATKAL";          // GENERAL, TATKAL, etc.
+
 
 
 /* -------- DATE: CLICK → IGNORE PICKER → PASTE -------- */
@@ -482,6 +486,168 @@ await selectQuota();
 
 
 
+// selectjourney starts here
+
+/* -------- TRAIN SELECTION (FIXED) -------- */
+async function selectJourney() {
+  status("🚂 Auto-selecting train " + TRAIN_NO);
+  
+  // Wait for train list
+  while(!document.querySelector("#divMain > div > app-train-list")) {
+    await sleep(500);
+  }
+  await sleep(2000); // Extra wait for full load
+  
+  
+  
+  
+  const trainList = document.querySelector("#divMain > div > app-train-list");
+  const trainBlocks = Array.from(trainList.querySelectorAll(".tbis-div app-train-avl-enq"));
+  
+  // Find train 
+  const ourTrain = trainBlocks.find(block => 
+    block.querySelector("div.train-heading")?.innerText.trim().includes(TRAIN_NO)
+  );
+  
+  if (!ourTrain) {
+    status("❌ Train " + TRAIN_NO + " not found");
+    return false;
+  }
+  status("✅ Train " + TRAIN_NO + " found");
+  
+  // Handle toast first
+  const toastLink1 = document.querySelector("#divMain > div > app-train-list > p-toast > div > p-toastitem > div > div > a");
+  const toastLink2 = document.querySelector("body > app-root > app-home > div.header-fix > app-header > p-toast > div > p-toastitem > div > div > a");
+  if (toastLink1 || toastLink2) {
+    safeClick(toastLink1 || toastLink2);
+    await sleep(1000);
+  }
+  
+  // STEP 1: Click class - WORKING
+  const classSelectors = [...ourTrain.querySelectorAll("table tr td div.pre-avl"), ...ourTrain.querySelectorAll("span")];
+  const slClass = classSelectors.find(el => 
+    el.innerText?.trim() === TRAIN_CLASS || 
+    el.querySelector("div")?.innerText.trim() === TRAIN_CLASS
+  );
+  
+  if (!slClass) {
+    status("❌ " + TRAIN_CLASS + " not found");
+    return false;
+  }
+  
+  safeClick(slClass);
+  status("✅ " + TRAIN_CLASS + " clicked");
+  await sleep(100); // Wait for class change
+  
+  // STEP 2: Click FIRST available date tab (usually today/tomorrow)
+  status("🔍 Looking for date tabs...");
+  await sleep(1000);
+  
+  // Try multiple date tab selectors
+  const dateTabSelectors = [
+    ".train-list-date", 
+    "div.date-tab",
+    "table tr td div.pre-avl",
+    ".ui-tabview-panel .ui-tabview-nav-link",
+    "[class*='date']"
+  ];
+  
+  let dateTab = null;
+  for (const selector of dateTabSelectors) {
+    dateTab = ourTrain.querySelector(selector);
+    if (dateTab && isElementVisible(dateTab)) break;
+    dateTab = null;
+  }
+  
+  // Fallback: first clickable tab after class
+  if (!dateTab) {
+    const allTabs = ourTrain.querySelectorAll("div[style*='cursor'], button, .pre-avl, span[style*='cursor']");
+    dateTab = Array.from(allTabs).find(tab => 
+      tab !== slClass && 
+      isElementVisible(tab) && 
+      tab.innerText?.trim() && 
+      !tab.innerText.trim().includes("SL")
+    );
+  }
+
+  while (true) {
+    status("⏰ Waiting for booking Opens at " + TIME);
+    const now = new Date();
+    const timeStr = now.toTimeString().substring(0, 8);
+    if (timeStr > TIME) break;
+    await sleep(1);
+  }
+  
+  if (dateTab) {
+    safeClick(dateTab);
+    status("✅ Date tab clicked");
+    await sleep(100);
+  } else {
+    status("⚠️ No date tab found, continuing...");
+  }
+  
+  // STEP 3: Wait for Book button and click
+  status("🎫 Waiting for Book button...");
+  let bookAttempts = 0;
+  while (bookAttempts < 20) {
+    const bookBtn = ourTrain.querySelector("button.btnDefault.train_Search.ng-star-inserted","button[class*='book']",
+      "button[class*='Book']",
+      ".train_Search",
+      "button:contains('Book')",
+      "button:contains('BOOK')",
+      "button[title*='Book']",
+      ".btn.btn-primary",
+      ".btnDefault",
+      "button[disabled!='true']",
+      ".ng-star-inserted button:not(.disable-book)",
+      "[class*='search'] button",
+      "app-train-avl-enq button",
+      ".tbis-div button",
+      "button[onclick*='book']");
+    
+    if (bookBtn && !bookBtn.disabled && !bookBtn.classList.contains("disable-book") && isElementVisible(bookBtn)) {
+      safeClick(bookBtn);
+      status("✅ BOOK clicked - going to passengers!");
+      return true;
+    }
+    
+    await sleep(500);
+    bookAttempts++;
+  }
+  
+  status("⚠️ Book button timeout");
+  return false;
+}
+
+function isElementVisible(el) {
+  if (!el) return false;
+  const style = window.getComputedStyle(el);
+  return style.display !== 'none' && 
+         style.visibility !== 'hidden' && 
+         style.opacity !== '0';
+}
+
+
+// select journey ends
+
+function isElementClickable(el) {
+  if (!el) return false;
+  const style = window.getComputedStyle(el);
+  return style.display !== 'none' && 
+         style.visibility !== 'hidden' && 
+         style.opacity !== '0' &&
+         !el.disabled &&
+         !el.classList.contains('disable-book') &&
+         el.offsetParent !== null;
+}
+
+// selectjourney ends here
+
+
+
+
+
+
 /* -------- MAIN -------- */
 /* -------- MAIN (PARALLEL FILLING) -------- */
 async function start(){
@@ -491,7 +657,8 @@ async function start(){
  
  // 🔥 STEP 0: SEARCH TRAINS FIRST
  await autoSearchTrains();
- await sleep(3000); // Wait for train results
+ await sleep(1000); // Wait for train results
+ await selectJourney();
 
 
  status("⚡ Parallel passenger fill starting...");
