@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IRCTC Automation Safari Param
 // @namespace    irctc.mobile.autofill
-// @version      3.1
+// @version      3.2
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
 // @updateURL    https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js
