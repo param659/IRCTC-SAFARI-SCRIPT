@@ -37,7 +37,7 @@ const PASSENGERS = [
 const CONTACT_NUMBER = "7021522401";
 const AUTO_UPGRADE = true;
 const CONFIRM_BERTH = true;
-const PAYMENT_MODE = "UPI";  // UPI | CARD
+const PAYMENT_MODE = "CARD";  // UPI | CARD
 
 /* ========================================== */
 
