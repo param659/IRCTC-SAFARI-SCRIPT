@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IRCTC
 // @namespace    irctc.mobile.autofill
-// @version      4.4
+// @version      4.5
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
 // @updateURL    https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js
@@ -18,7 +18,7 @@ console.log("IRCTC Autofill ALWAYS Loaded");
 /* ================= CONFIG ================= */
 
 const TRAIN_NO = "20907";
-const TRAIN_CLASS = "Sleeper (SL)"; //AC 3 Tier (3A), AC 2 Tier (2A), AC First Class (1A), Sleeper (SL),AC Chair car (CC)
+const TRAIN_CLASS = "AC 3 Tier (3A)"; //AC 3 Tier (3A), AC 2 Tier (2A), AC First Class (1A), Sleeper (SL),AC Chair car (CC)
 const FROM_STATION = "DADAR - DDR (MUMBAI)";
 const TO_STATION = "BHUJ - BHUJ";
 const TRAVEL_DATE = "05/03/2026";
@@ -26,10 +26,10 @@ const QUOTA = "TATKAL";
 const TIME = "09:59:59"; // 24hr format - when booking opens for the date  
 
 const PASSENGERS = [
-  { name:"Trilochan", age:"27", gender:"MALE", berth:"No Preference" },
-  { name:"ABHISHEK", age:"27", gender:"MALE", berth:"No Preference" },
-  { name:"RUDRA", age:"27", gender:"MALE", berth:"No Preference" },
-  { name:"BHEEM", age:"27", gender:"MALE", berth:"No Preference" }
+  // { name:"Trilochan", age:"27", gender:"MALE", berth:"No Preference" },
+  // { name:"ABHISHEK", age:"27", gender:"MALE", berth:"No Preference" },
+  { name:"D V POKAR", age:"75", gender:"MALE", berth:"No Preference" },
+  { name:"S D POKAR", age:"69", gender:"FEMALE", berth:"No Preference" }
 //   { name:"RAJ PATEL", age:"27", gender:"MALE", berth:"No Preference" },
 //   { name:"NEELA", age:"27", gender:"MALE", berth:"No Preference" }
 ];
@@ -37,7 +37,7 @@ const PASSENGERS = [
 const CONTACT_NUMBER = "8329935109";
 const AUTO_UPGRADE = true;
 const CONFIRM_BERTH = true;
-const PAYMENT_MODE = "CARD";  // UPI | CARD
+const PAYMENT_MODE = "UPI";  // UPI | CARD
 
 /* ========================================== */
 
@@ -523,7 +523,7 @@ async function selectJourney() {
     await sleep(1000);
   }
   
-  // STEP 1: Click class - WORKING
+  // STEP 1: Click class 
   const classSelectors = [...ourTrain.querySelectorAll("table tr td div.pre-avl"), ...ourTrain.querySelectorAll("span")];
   const slClass = classSelectors.find(el => 
     el.innerText?.trim() === TRAIN_CLASS || 
@@ -543,14 +543,14 @@ async function selectJourney() {
     if (timeStr > TIME) break;
     await sleep(1);
   }
-  
+
   safeClick(slClass);
   status("✅ " + TRAIN_CLASS + " clicked");
-  await sleep(100); // Wait for class change
+  await sleep(1000); // Wait for class change
   
   // STEP 2: Click FIRST available date tab (usually today/tomorrow)
   status("🔍 Looking for date tabs...");
-  await sleep(1000);
+  // await sleep(1000);
   
   // Try multiple date tab selectors
   const dateTabSelectors = [
@@ -575,7 +575,7 @@ async function selectJourney() {
       tab !== slClass && 
       isElementVisible(tab) && 
       tab.innerText?.trim() && 
-      !tab.innerText.trim().includes("SL")
+      !tab.innerText.trim().includes("AVAILABLE")
     );
   }
 
