@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IRCTC
 // @namespace    irctc.mobile.autofill
-// @version      4.5
+// @version      4.6
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
 // @updateURL    https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js
@@ -17,10 +17,10 @@ console.log("IRCTC Autofill ALWAYS Loaded");
 
 /* ================= CONFIG ================= */
 
-const TRAIN_NO = "20907";
+const TRAIN_NO = "20496";
 const TRAIN_CLASS = "AC 3 Tier (3A)"; //AC 3 Tier (3A), AC 2 Tier (2A), AC First Class (1A), Sleeper (SL),AC Chair car (CC)
-const FROM_STATION = "DADAR - DDR (MUMBAI)";
-const TO_STATION = "BHUJ - BHUJ";
+const FROM_STATION = "PUNE JN - PUNE (PUNE)";
+const TO_STATION = "AHMEDABAD JN - ADI (AHMEDABAD)";
 const TRAVEL_DATE = "05/03/2026";
 const QUOTA = "TATKAL";
 const TIME = "09:59:59"; // 24hr format - when booking opens for the date  
@@ -28,13 +28,13 @@ const TIME = "09:59:59"; // 24hr format - when booking opens for the date
 const PASSENGERS = [
   // { name:"Trilochan", age:"27", gender:"MALE", berth:"No Preference" },
   // { name:"ABHISHEK", age:"27", gender:"MALE", berth:"No Preference" },
-  { name:"D V POKAR", age:"75", gender:"MALE", berth:"No Preference" },
-  { name:"S D POKAR", age:"69", gender:"FEMALE", berth:"No Preference" }
+  { name:"Devkaben", age:"69", gender:"FEMALE", berth:"No Preference" },
+  { name:"Narmada", age:"69", gender:"FEMALE", berth:"No Preference" }
 //   { name:"RAJ PATEL", age:"27", gender:"MALE", berth:"No Preference" },
 //   { name:"NEELA", age:"27", gender:"MALE", berth:"No Preference" }
 ];
 
-const CONTACT_NUMBER = "8329935109";
+const CONTACT_NUMBER = "7021522401";
 const AUTO_UPGRADE = true;
 const CONFIRM_BERTH = true;
 const PAYMENT_MODE = "UPI";  // UPI | CARD
