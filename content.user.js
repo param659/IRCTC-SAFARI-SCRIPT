@@ -20,7 +20,7 @@ console.log("IRCTC Autofill ALWAYS Loaded");
 const TRAIN_NO = "20496";
 const TRAIN_CLASS = "AC 3 Tier (3A)"; //AC 3 Tier (3A), AC 2 Tier (2A), AC First Class (1A), Sleeper (SL),AC Chair car (CC)
 const FROM_STATION = "PUNE JN - PUNE (PUNE)";
-const TO_STATION = "AHMEDABAD JN - ADI (AHMEDABAD)";
+const TO_STATION = "SABARMATI BG - SBIB (AHMEDABAD)";
 const TRAVEL_DATE = "06/03/2026";
 const QUOTA = "TATKAL";
 const TIME = "09:59:59"; // 24hr format - when booking opens for the date  
