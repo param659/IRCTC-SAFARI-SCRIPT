@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         IRCTC
 // @namespace    irctc.mobile.autofill
-// @version      4.6
+// @version      4.7
 // @description  Mobile Safari IRCTC autofill with always-visible button
 // @match        *://*.irctc.co.in/*
 // @updateURL    https://raw.githubusercontent.com/param659/IRCTC-SAFARI-SCRIPT/refs/heads/main/content.user.js
@@ -21,7 +21,7 @@ const TRAIN_NO = "20496";
 const TRAIN_CLASS = "AC 3 Tier (3A)"; //AC 3 Tier (3A), AC 2 Tier (2A), AC First Class (1A), Sleeper (SL),AC Chair car (CC)
 const FROM_STATION = "PUNE JN - PUNE (PUNE)";
 const TO_STATION = "AHMEDABAD JN - ADI (AHMEDABAD)";
-const TRAVEL_DATE = "05/03/2026";
+const TRAVEL_DATE = "06/03/2026";
 const QUOTA = "TATKAL";
 const TIME = "09:59:59"; // 24hr format - when booking opens for the date  
 
